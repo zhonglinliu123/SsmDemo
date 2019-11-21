@@ -18,19 +18,43 @@
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
     <!-- 定义目标对象 -->
-<!--    <bean id="userService" class="com.zlin.service.impl.UserServiceImpl" />-->
+    <!--    <bean id="userService" class="com.zlin.service.impl.UserServiceImpl" />-->
 
     <!-- 定义aspect类 -->
-<!--    <bean name="myAspectJ" class="com.zlin.aspect.MyAspect" />-->
+    <!--    <bean name="myAspectJ" class="com.zlin.aspect.MyAspect" />-->
 
     <mvc:annotation-driven />
 
     <!-- 开启aop，对类代理 -->
     <aop:config proxy-target-class="true" />
 
+    <!-- 静态资源映射 -->
+    <!-- 缓存存在时间 cache-period 1年 -->
+    <!--    <mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>-->
+    <!--    <mvc:resources mapping="/portal/**" location="/portal/" cache-period="31556926"/>-->
+    <!--    <mvc:resources mapping="/errors/**" location="/errors/" cache-period="31556926"/>-->
+    <!-- 为啥不起作用? 访问静态资源还是经过DispatcherServlet处理 -->
+    <mvc:resources location="/" mapping="/*.html"/>
+    <mvc:resources location="/" mapping="/*.jsp"/>
+    <mvc:resources location="/" mapping="/*.css"/>
+    <mvc:resources location="/" mapping="/*.js"/>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 配置多媒体文件解析器 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设定默认编码 -->
+        <property name="defaultEncoding" value="UTF-8" />
+        <!-- 设定文件上传的最大值2MB， 2*1024*1024 -->
+        <property name="maxUploadSize" value="2097152" />
+        <!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常-->
+        <property name="resolveLazily" value="true"/>
+        <!-- 缓冲区大小(单位:KB) -->
+        <property name="maxInMemorySize" value="10240" />
     </bean>
 
     <!-- 属性文件不能跨容器，要在controller中也能被访问到，也需要配置 -->
